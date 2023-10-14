@@ -1,0 +1,42 @@
+import 'package:ecommerce_app/src/constants/test_products.dart';
+import 'package:ecommerce_app/src/features/products/domain/product.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class FakeProductsRepository {
+  final List<Product> _products = kTestProducts;
+  List<Product> getProductsList() {
+    return kTestProducts;
+  }
+
+  Product? getProduct(String id) {
+    return kTestProducts.firstWhere((product) => product.id == id);
+  }
+
+  Future<List<Product>> fetchProductsList() async {
+    await Future.delayed(const Duration(seconds: 2));
+    return Future.value(_products);
+  }
+
+  Stream<List<Product>> watchProductsList() async* {
+    Future.delayed(const Duration(seconds: 2));
+    yield _products;
+  }
+
+  Stream<Product?> watchProduct(String id) {
+    return watchProductsList()
+        .map((products) => products.firstWhere((element) => element.id == id));
+  }
+}
+
+final productsRepositoryProvider = Provider<FakeProductsRepository>((ref) {
+  return FakeProductsRepository();
+});
+
+final productsListStreamProvider = StreamProvider<List<Product>>((ref) {
+  final productsRepository = ref.watch(productsRepositoryProvider);
+  return productsRepository.watchProductsList();
+});
+final productsListFutureProvider = FutureProvider<List<Product>>((ref) {
+  final productsRepository = ref.watch(productsRepositoryProvider);
+  return productsRepository.fetchProductsList();
+});
