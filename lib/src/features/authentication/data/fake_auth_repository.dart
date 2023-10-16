@@ -26,6 +26,8 @@ class FakeAuthRepository {
   }
 
   FutureVoid signOut() async {
+    // await Future.delayed(const Duration(seconds: 3));
+    // throw Exception('connection failed');
     _authState.value = null;
   }
 
