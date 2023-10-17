@@ -6,8 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class FakeAuthRepository {
   final _authState = InMemoryStore<AppUser?>(null);
 
+  Stream<AppUser?> authStateChanges() => _authState.stream;
+  AppUser? get currentUser => _authState.value;
+
   FutureVoid signInWithEmailAndPassword(String email, String password) async {
     if (currentUser == null) {
+      await Future.delayed(const Duration(seconds: 3));
       _authState.value =
           AppUser(uid: email.split('').reversed.join(), email: email);
     }
@@ -16,6 +20,7 @@ class FakeAuthRepository {
   FutureVoid createUserWithEmailAndPassword(
       String email, String password) async {
     if (currentUser == null) {
+      await Future.delayed(const Duration(seconds: 3));
       _createNewUser(email);
     }
   }
@@ -26,15 +31,12 @@ class FakeAuthRepository {
   }
 
   FutureVoid signOut() async {
-    // await Future.delayed(const Duration(seconds: 3));
-    // throw Exception('connection failed');
+    await Future.delayed(const Duration(seconds: 3));
+
     _authState.value = null;
   }
 
   void dispose() => _authState.close();
-
-  Stream<AppUser?> authStateChanges() => _authState.stream;
-  AppUser? get currentUser => _authState.value;
 }
 
 final authRepositoryProvider = Provider<FakeAuthRepository>((ref) {
