@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:ecommerce_app/src/common_widgets/async_value_widget.dart';
-import 'package:ecommerce_app/src/common_widgets/error_message_widget.dart';
 import 'package:ecommerce_app/src/features/products/data/fake_products_repository.dart';
 import 'package:ecommerce_app/src/features/products/domain/product.dart';
 import 'package:ecommerce_app/src/features/products/presentation/products_list/product_card.dart';
@@ -19,30 +18,30 @@ class ProductsGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Read from data source
-    final productsListValue = ref.watch(productsListFutureProvider);
+    final productsListValue = ref.watch(productsListStreamProvider);
     return AsyncValueWidget<List<Product>>(
-        value: productsListValue,
-        data: (products) => products.isEmpty
-            ? Center(
-                child: Text(
-                  'No products found'.hardcoded,
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              )
-            : ProductsLayoutGrid(
-                itemCount: products.length,
-                itemBuilder: (_, index) {
-                  final product = products[index];
-                  return ProductCard(
-                    product: product,
-                    onPressed: () => context.goNamed(
-                      AppRoute.product.name,
-                      pathParameters: {'id': product.id},
-                    ),
-                  );
-                },
-              ));
+      value: productsListValue,
+      data: (products) => products.isEmpty
+          ? Center(
+              child: Text(
+                'No products found'.hardcoded,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            )
+          : ProductsLayoutGrid(
+              itemCount: products.length,
+              itemBuilder: (_, index) {
+                final product = products[index];
+                return ProductCard(
+                  product: product,
+                  onPressed: () => context.goNamed(
+                    AppRoute.product.name,
+                    pathParameters: {'id': product.id},
+                  ),
+                );
+              },
+            ),
+    );
   }
 }
 

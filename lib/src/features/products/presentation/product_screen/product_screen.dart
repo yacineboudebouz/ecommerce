@@ -1,6 +1,4 @@
 import 'package:ecommerce_app/src/common_widgets/async_value_widget.dart';
-import 'package:ecommerce_app/src/common_widgets/error_message_widget.dart';
-import 'package:ecommerce_app/src/constants/test_products.dart';
 import 'package:ecommerce_app/src/features/cart/presentation/add_to_cart/add_to_cart_widget.dart';
 import 'package:ecommerce_app/src/features/products/data/fake_products_repository.dart';
 import 'package:ecommerce_app/src/features/products/presentation/home_app_bar/home_app_bar.dart';
@@ -28,7 +26,7 @@ class ProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: const HomeAppBar(),
       body: Consumer(
-        builder: (context, ref, child) {
+        builder: (context, ref, _) {
           final productValue = ref.watch(productProvider(productId));
           return AsyncValueWidget<Product?>(
             value: productValue,
@@ -55,13 +53,14 @@ class ProductScreen extends StatelessWidget {
 /// Shows all the product details along with actions to:
 /// - leave a review
 /// - add to cart
-class ProductDetails extends StatelessWidget {
+class ProductDetails extends ConsumerWidget {
   const ProductDetails({super.key, required this.product});
   final Product product;
 
   @override
-  Widget build(BuildContext context) {
-    final priceFormatted = kCurrencyFormatter.format(product.price);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final priceFormatted =
+        ref.watch(currencyFormatterProvider).format(product.price);
     return ResponsiveTwoColumnLayout(
       startContent: Card(
         child: Padding(
