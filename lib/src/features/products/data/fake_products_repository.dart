@@ -1,33 +1,47 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:ecommerce_app/src/constants/test_products.dart';
-import 'package:ecommerce_app/src/features/products/domain/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:ecommerce_app/src/constants/test_products.dart';
+import 'package:ecommerce_app/src/features/products/domain/product.dart';
+import 'package:ecommerce_app/src/utils/delay.dart';
+
 class FakeProductsRepository {
   final List<Product> _products = kTestProducts;
+  final bool addDelay;
+  FakeProductsRepository({
+    this.addDelay = true,
+  });
   List<Product> getProductsList() {
     return _products;
   }
 
   Product? getProduct(String id) {
-    return kTestProducts.firstWhere((product) => product.id == id);
+    return _getProduct(_products, id);
   }
 
   Future<List<Product>> fetchProductsList() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await delay(addDelay);
     return Future.value(_products);
   }
 
   Stream<List<Product>> watchProductsList() async* {
-    Future.delayed(const Duration(seconds: 2));
+    await delay(addDelay);
     yield _products;
   }
 
   Stream<Product?> watchProduct(String id) {
-    return watchProductsList()
-        .map((products) => products.firstWhere((element) => element.id == id));
+    return watchProductsList().map((products) => _getProduct(products, id));
+  }
+
+  static Product? _getProduct(List<Product> products, String id) {
+    try {
+      return products.firstWhere((product) => product.id == id);
+    } catch (e) {
+      return null;
+    }
   }
 }
 
