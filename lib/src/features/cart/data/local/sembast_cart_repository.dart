@@ -11,6 +11,8 @@ import 'package:sembast_web/sembast_web.dart';
 class SembastCartRepository implements LocalCartRepository {
   final Database db;
   SembastCartRepository(this.db);
+  final store = StoreRef.main();
+
   static Future<Database> createDatabase(String filename) async {
     if (!kIsWeb) {
       final appDocDir = await getApplicationCacheDirectory();
@@ -24,21 +26,32 @@ class SembastCartRepository implements LocalCartRepository {
     return SembastCartRepository(await createDatabase('default.db'));
   }
 
+  static const cartItemKey = 'cartItems';
+
   @override
-  Future<Cart> fetchCart() {
-    // TODO: implement fetchCart
-    throw UnimplementedError();
+  Future<Cart> fetchCart() async {
+    final cartJson = await store.record(cartItemKey).get(db) as String?;
+    if (cartJson != null) {
+      return Cart.fromJson(cartJson);
+    } else {
+      return const Cart();
+    }
   }
 
   @override
   Future<void> setCart(Cart cart) {
-    // TODO: implement setCart
-    throw UnimplementedError();
+    return store.record(cartItemKey).put(db, cart.toJson());
   }
 
   @override
   Stream<Cart> watchCart() {
-    // TODO: implement watchCart
-    throw UnimplementedError();
+    final record = store.record(cartItemKey);
+    return record.onSnapshot(db).map((event) {
+      if (event != null) {
+        return Cart.fromJson(event.value as String);
+      } else {
+        return const Cart();
+      }
+    });
   }
 }

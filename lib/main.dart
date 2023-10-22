@@ -6,7 +6,6 @@ import 'package:ecommerce_app/src/features/cart/data/local/sembast_cart_reposito
 import 'package:ecommerce_app/src/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sembast/sembast.dart';
 
 void main() async {
   // * For more info on error handling, see:
