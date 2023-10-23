@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ecommerce_app/src/app.dart';
 import 'package:ecommerce_app/src/features/cart/data/local/local_cart_repository.dart';
 import 'package:ecommerce_app/src/features/cart/data/local/sembast_cart_repository.dart';
+
 import 'package:ecommerce_app/src/localization/string_hardcoded.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,9 +15,10 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     // turn off the # in the URLs on the web
     final localCartRepository = await SembastCartRepository.makeDefault();
+
     // * Entry point of the app
     runApp(ProviderScope(overrides: [
-      localCartRepositoryProvider.overrideWithValue(localCartRepository)
+      localCartRepositoryProvider.overrideWithValue(localCartRepository),
     ], child: const MyApp()));
 
     // * This code will present some error UI if any uncaught exception happens

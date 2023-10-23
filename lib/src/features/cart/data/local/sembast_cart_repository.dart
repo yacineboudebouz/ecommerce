@@ -15,7 +15,7 @@ class SembastCartRepository implements LocalCartRepository {
 
   static Future<Database> createDatabase(String filename) async {
     if (!kIsWeb) {
-      final appDocDir = await getApplicationCacheDirectory();
+      final appDocDir = await getApplicationDocumentsDirectory();
       return databaseFactoryIo.openDatabase('${appDocDir.path}/$filename');
     } else {
       return databaseFactoryWeb.openDatabase(filename);
