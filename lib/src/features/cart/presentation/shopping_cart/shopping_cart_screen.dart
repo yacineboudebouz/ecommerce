@@ -22,6 +22,7 @@ class ShoppingCartScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<void>>(shoppingCartScreenControllerProvider,
         (_, state) => state.showAlertDialigOnError(context));
+    final state = ref.watch(shoppingCartScreenControllerProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Shopping Cart'.hardcoded),
@@ -37,6 +38,7 @@ class ShoppingCartScreen extends ConsumerWidget {
               itemIndex: index,
             ),
             ctaBuilder: (_) => PrimaryButton(
+              isLoading: state.isLoading,
               text: 'Checkout'.hardcoded,
               onPressed: () => context.pushNamed(AppRoute.checkout.name),
             ),
