@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ecommerce_app/src/app.dart';
+import 'package:ecommerce_app/src/features/cart/application/cart_sync_service.dart';
 import 'package:ecommerce_app/src/features/cart/data/local/local_cart_repository.dart';
 import 'package:ecommerce_app/src/features/cart/data/local/sembast_cart_repository.dart';
 
@@ -15,11 +16,15 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     // turn off the # in the URLs on the web
     final localCartRepository = await SembastCartRepository.makeDefault();
-
+    final container = ProviderContainer(
+      overrides: [
+        localCartRepositoryProvider.overrideWithValue(localCartRepository),
+      ],
+    );
+    container.read(cartSyncServieProvider);
     // * Entry point of the app
-    runApp(ProviderScope(overrides: [
-      localCartRepositoryProvider.overrideWithValue(localCartRepository),
-    ], child: const MyApp()));
+    runApp(
+        UncontrolledProviderScope(container: container, child: const MyApp()));
 
     // * This code will present some error UI if any uncaught exception happens
     FlutterError.onError = (FlutterErrorDetails details) {
