@@ -5,5 +5,3 @@ final dateFormatterProvider = Provider<DateFormat>((ref) {
   /// Date formatter to be used in the app.
   return DateFormat.MMMEd();
 });
-
-final kDateFormatter = DateFormat.MMMEd();

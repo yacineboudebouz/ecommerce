@@ -19,7 +19,7 @@ void main() {
     await r.pumpAccountScreen();
     await r.tapLogoutButton();
     r.expectLogoutDialogFound();
-    // await r.tapDialogLogoutButton();
+    await r.tapDialogLogoutButton();
     r.expectLogoutDialogNotFound();
     r.expectErrorAlertNotFound();
   });
@@ -36,7 +36,7 @@ void main() {
     await r.pumpAccountScreen(authRepository: authRepository);
     await r.tapLogoutButton();
     r.expectLogoutDialogFound();
-    // await r.tapDialogLogoutButton();
+    await r.tapDialogLogoutButton();
     r.expectErrorAlertFound();
   });
   testWidgets('Confirm logout, loading state', (tester) async {
@@ -54,7 +54,7 @@ void main() {
     await tester.runAsync(() async {
       await r.tapLogoutButton();
       r.expectLogoutDialogFound();
-      // await r.tapDialogLogoutButton();
+      await r.tapDialogLogoutButton();
     });
     r.expectCircularProgressIndicator();
   });

@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+const kDialogDefaultKey = Key('dialog-default-key');
+
 /// Generic function to show a platform-aware Material or Cupertino dialog
 Future<bool?> showAlertDialog({
   required BuildContext context,
@@ -16,6 +18,7 @@ Future<bool?> showAlertDialog({
   if (kIsWeb || !Platform.isIOS) {
     return showDialog(
       context: context,
+      barrierDismissible: cancelActionText != null,
       builder: (context) => AlertDialog(
         title: Text(title),
         content: content != null ? Text(content) : null,
@@ -26,6 +29,7 @@ Future<bool?> showAlertDialog({
               onPressed: () => Navigator.of(context).pop(false),
             ),
           TextButton(
+            key: kDialogDefaultKey,
             child: Text(defaultActionText),
             onPressed: () => Navigator.of(context).pop(true),
           ),
@@ -35,6 +39,7 @@ Future<bool?> showAlertDialog({
   }
   return showCupertinoDialog(
     context: context,
+    barrierDismissible: cancelActionText != null,
     builder: (context) => CupertinoAlertDialog(
       title: Text(title),
       content: content != null ? Text(content) : null,
@@ -45,6 +50,7 @@ Future<bool?> showAlertDialog({
             onPressed: () => Navigator.of(context).pop(false),
           ),
         CupertinoDialogAction(
+          key: kDialogDefaultKey,
           child: Text(defaultActionText),
           onPressed: () => Navigator.of(context).pop(true),
         ),

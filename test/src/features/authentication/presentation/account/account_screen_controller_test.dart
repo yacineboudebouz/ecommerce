@@ -12,7 +12,7 @@ void main() {
   setUp(() {
     authRepository = MockAuthRepository();
     controller = AccountScreenController(
-      authRepository,
+      authRepository: authRepository,
     );
   });
   group('AccountScreenController', () {

@@ -5,7 +5,6 @@ import 'package:ecommerce_app/src/features/cart/presentation/shopping_cart/shopp
 import 'package:ecommerce_app/src/features/cart/presentation/shopping_cart/shopping_cart_items_builder.dart';
 import 'package:ecommerce_app/src/features/cart/presentation/shopping_cart/shopping_cart_screen_controller.dart';
 import 'package:ecommerce_app/src/localization/string_hardcoded.dart';
-
 import 'package:ecommerce_app/src/routing/app_router.dart';
 import 'package:ecommerce_app/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -20,31 +19,35 @@ class ShoppingCartScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue<void>>(shoppingCartScreenControllerProvider,
-        (_, state) => state.showAlertDialigOnError(context));
+    ref.listen<AsyncValue<void>>(
+      shoppingCartScreenControllerProvider,
+      (_, state) => state.showAlertDialogOnError(context),
+    );
     final state = ref.watch(shoppingCartScreenControllerProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Shopping Cart'.hardcoded),
       ),
-      body: Consumer(builder: (context, ref, child) {
-        final cartValue = ref.watch(cartProvider);
-        return AsyncValueWidget<Cart>(
-          value: cartValue,
-          data: (cart) => ShoppingCartItemsBuilder(
-            items: cart.toItemsList(),
-            itemBuilder: (_, item, index) => ShoppingCartItem(
-              item: item,
-              itemIndex: index,
+      body: Consumer(
+        builder: (context, ref, child) {
+          final cartValue = ref.watch(cartProvider);
+          return AsyncValueWidget<Cart>(
+            value: cartValue,
+            data: (cart) => ShoppingCartItemsBuilder(
+              items: cart.toItemsList(),
+              itemBuilder: (_, item, index) => ShoppingCartItem(
+                item: item,
+                itemIndex: index,
+              ),
+              ctaBuilder: (_) => PrimaryButton(
+                text: 'Checkout'.hardcoded,
+                isLoading: state.isLoading,
+                onPressed: () => context.pushNamed(AppRoute.checkout.name),
+              ),
             ),
-            ctaBuilder: (_) => PrimaryButton(
-              isLoading: state.isLoading,
-              text: 'Checkout'.hardcoded,
-              onPressed: () => context.pushNamed(AppRoute.checkout.name),
-            ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

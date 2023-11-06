@@ -7,17 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The two sub-routes that are presented as part of the checkout flow.
-/// TODO: add the address page as well (see [AddressScreen]).
 enum CheckoutSubRoute { register, payment }
 
 /// This is the root widget of the checkout flow, which is composed of 2 pages:
 /// 1. Register page
 /// 2. Payment page
-/// The correct page is displayed (and updated) based on whether the user is
-/// signed in.
-/// The logic for the entire flow is implemented in the
-/// [CheckoutScreenController], while UI updates are handled by a
-/// [PageController].
 class CheckoutScreen extends ConsumerStatefulWidget {
   const CheckoutScreen({super.key});
 
@@ -35,9 +29,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     super.initState();
     final user = ref.read(authRepositoryProvider).currentUser;
     if (user != null) {
-      setState(() {
-        _subRoute = CheckoutSubRoute.payment;
-      });
+      setState(() => _subRoute = CheckoutSubRoute.payment);
     }
     _controller = PageController(initialPage: _subRoute.index);
   }

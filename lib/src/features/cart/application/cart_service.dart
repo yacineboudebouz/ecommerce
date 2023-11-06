@@ -1,8 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
-
-import 'package:ecommerce_app/src/features/products/data/fake_products_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ecommerce_app/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:ecommerce_app/src/features/cart/data/local/local_cart_repository.dart';
@@ -10,14 +6,16 @@ import 'package:ecommerce_app/src/features/cart/data/remote/remote_cart_reposito
 import 'package:ecommerce_app/src/features/cart/domain/cart.dart';
 import 'package:ecommerce_app/src/features/cart/domain/item.dart';
 import 'package:ecommerce_app/src/features/cart/domain/mutable_cart.dart';
+import 'package:ecommerce_app/src/features/products/data/fake_products_repository.dart';
 import 'package:ecommerce_app/src/features/products/domain/product.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CartService {
+  CartService(this.ref);
   final Ref ref;
-  CartService({
-    required this.ref,
-  });
 
+  /// fetch the cart from the local or remote repository
+  /// depending on the user auth state
   Future<Cart> _fetchCart() {
     final user = ref.read(authRepositoryProvider).currentUser;
     if (user != null) {
@@ -27,6 +25,8 @@ class CartService {
     }
   }
 
+  /// save the cart to the local or remote repository
+  /// depending on the user auth state
   Future<void> _setCart(Cart cart) async {
     final user = ref.read(authRepositoryProvider).currentUser;
     if (user != null) {
@@ -36,28 +36,33 @@ class CartService {
     }
   }
 
+  /// sets an item in the local or remote cart depending on the user auth state
   Future<void> setItem(Item item) async {
     final cart = await _fetchCart();
     final updated = cart.setItem(item);
     await _setCart(updated);
   }
 
+  /// adds an item in the local or remote cart depending on the user auth state
   Future<void> addItem(Item item) async {
     final cart = await _fetchCart();
     final updated = cart.addItem(item);
     await _setCart(updated);
   }
 
-  Future<void> removeItemById(ProductID productID) async {
+  /// removes an item from the local or remote cart depending on the user auth
+  /// state
+  Future<void> removeItemById(ProductID productId) async {
     final cart = await _fetchCart();
-    final updated = cart.removeItemById(productID);
+    final updated = cart.removeItemById(productId);
     await _setCart(updated);
   }
 }
 
 final cartServiceProvider = Provider<CartService>((ref) {
-  return CartService(ref: ref);
+  return CartService(ref);
 });
+
 final cartProvider = StreamProvider<Cart>((ref) {
   final user = ref.watch(authStateChangesProvider).value;
   if (user != null) {
@@ -66,12 +71,12 @@ final cartProvider = StreamProvider<Cart>((ref) {
     return ref.watch(localCartRepositoryProvider).watchCart();
   }
 });
+
 final cartItemsCountProvider = Provider<int>((ref) {
-  final cartItemsCount = ref.watch(cartProvider).maybeWhen(
-        data: ((data) => data.items.length),
+  return ref.watch(cartProvider).maybeMap(
+        data: (cart) => cart.value.items.length,
         orElse: () => 0,
       );
-  return cartItemsCount;
 });
 
 final cartTotalProvider = Provider.autoDispose<double>((ref) {
@@ -91,10 +96,12 @@ final cartTotalProvider = Provider.autoDispose<double>((ref) {
 });
 
 final itemAvailableQuantityProvider =
-    Provider.family<int, Product>((ref, product) {
+    Provider.autoDispose.family<int, Product>((ref, product) {
   final cart = ref.watch(cartProvider).value;
   if (cart != null) {
+    // get the current quantity for the given product in the cart
     final quantity = cart.items[product.id] ?? 0;
+    // subtract it from the product available quantity
     return max(0, product.availableQuantity - quantity);
   } else {
     return product.availableQuantity;

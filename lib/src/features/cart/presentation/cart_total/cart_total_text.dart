@@ -10,7 +10,6 @@ class CartTotalText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartTotal = ref.watch(cartTotalProvider);
-
     final totalFormatted =
         ref.watch(currencyFormatterProvider).format(cartTotal);
     return Text(

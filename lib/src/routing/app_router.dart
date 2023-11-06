@@ -8,7 +8,7 @@ import 'package:ecommerce_app/src/features/orders/presentation/orders_list/order
 import 'package:ecommerce_app/src/features/products/presentation/product_screen/product_screen.dart';
 import 'package:ecommerce_app/src/features/products/presentation/products_list/products_list_screen.dart';
 import 'package:ecommerce_app/src/features/reviews/presentation/leave_review_screen/leave_review_screen.dart';
-
+import 'package:ecommerce_app/src/routing/go_router_refresh_stream.dart';
 import 'package:ecommerce_app/src/routing/not_found_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,21 +30,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: false,
-    redirect: ((context, state) {
+    redirect: (context, state) {
       final isLoggedIn = authRepository.currentUser != null;
-      // ignore: dead_code
       if (isLoggedIn) {
-        if (state.name == '/signIn') {
+        if (state.path == '/signIn') {
           return '/';
         }
       } else {
-        if (state.name == '/account' || state.name == '/orders') {
+        if (state.path == '/account' || state.path == '/orders') {
           return '/';
         }
       }
       return null;
-    }),
-    // refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
+    },
+    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
     routes: [
       GoRoute(
         path: '/',
@@ -86,7 +85,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 path: 'checkout',
                 name: AppRoute.checkout.name,
                 pageBuilder: (context, state) => MaterialPage(
-                  key: state.pageKey,
+                  key: ValueKey(state.path),
                   fullscreenDialog: true,
                   child: const CheckoutScreen(),
                 ),

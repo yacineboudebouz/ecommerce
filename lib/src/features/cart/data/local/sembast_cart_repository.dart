@@ -1,16 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:ecommerce_app/src/features/cart/data/local/local_cart_repository.dart';
+import 'package:ecommerce_app/src/features/cart/domain/cart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
-
-import 'package:ecommerce_app/src/features/cart/data/local/local_cart_repository.dart';
-import 'package:ecommerce_app/src/features/cart/domain/cart.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:sembast_web/sembast_web.dart';
 
 class SembastCartRepository implements LocalCartRepository {
-  final Database db;
   SembastCartRepository(this.db);
+  final Database db;
   final store = StoreRef.main();
 
   static Future<Database> createDatabase(String filename) async {
@@ -26,11 +24,11 @@ class SembastCartRepository implements LocalCartRepository {
     return SembastCartRepository(await createDatabase('default.db'));
   }
 
-  static const cartItemKey = 'cartItems';
+  static const cartItemsKey = 'cartItems';
 
   @override
   Future<Cart> fetchCart() async {
-    final cartJson = await store.record(cartItemKey).get(db) as String?;
+    final cartJson = await store.record(cartItemsKey).get(db) as String?;
     if (cartJson != null) {
       return Cart.fromJson(cartJson);
     } else {
@@ -40,15 +38,15 @@ class SembastCartRepository implements LocalCartRepository {
 
   @override
   Future<void> setCart(Cart cart) {
-    return store.record(cartItemKey).put(db, cart.toJson());
+    return store.record(cartItemsKey).put(db, cart.toJson());
   }
 
   @override
   Stream<Cart> watchCart() {
-    final record = store.record(cartItemKey);
-    return record.onSnapshot(db).map((event) {
-      if (event != null) {
-        return Cart.fromJson(event.value as String);
+    final record = store.record(cartItemsKey);
+    return record.onSnapshot(db).map((snapshot) {
+      if (snapshot != null) {
+        return Cart.fromJson(snapshot.value as String);
       } else {
         return const Cart();
       }

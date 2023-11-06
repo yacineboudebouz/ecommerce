@@ -69,6 +69,13 @@ class AuthRobot {
     await tester.enterText(passwordField, password);
   }
 
+  void expectEmailAndPasswordFieldsFound() {
+    final emailField = find.byKey(EmailPasswordSignInScreen.emailKey);
+    expect(emailField, findsOneWidget);
+    final passwordField = find.byKey(EmailPasswordSignInScreen.passwordKey);
+    expect(passwordField, findsOneWidget);
+  }
+
   void expectCreateAccountButtonFound() {
     final dialogTitle = find.text('Create an account');
     expect(dialogTitle, findsOneWidget);
@@ -79,7 +86,7 @@ class AuthRobot {
     expect(dialogTitle, findsNothing);
   }
 
-  Future<void> signInWithEmailAndPassword() async {
+  Future<void> enterAndSubmitEmailAndPassword() async {
     await enterEmail('test@test.com');
     await enterPassword('test1234');
     await tapEmailAndPasswordSubmitButton();
@@ -132,12 +139,12 @@ class AuthRobot {
     expect(dialogTitle, findsNothing);
   }
 
-  // Future<void> tapDialogLogoutButton() async {
-  //   final logoutButton = find.byKey();
-  //   expect(logoutButton, findsOneWidget);
-  //   await tester.tap(logoutButton);
-  //   await tester.pump();
-  // }
+  Future<void> tapDialogLogoutButton() async {
+    final logoutButton = find.byKey(kDialogDefaultKey);
+    expect(logoutButton, findsOneWidget);
+    await tester.tap(logoutButton);
+    await tester.pump();
+  }
 
   void expectErrorAlertFound() {
     final finder = find.text('Error');

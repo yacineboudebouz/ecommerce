@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:ecommerce_app/src/common_widgets/alert_dialogs.dart';
 import 'package:ecommerce_app/src/common_widgets/async_value_widget.dart';
 import 'package:ecommerce_app/src/features/cart/presentation/shopping_cart/shopping_cart_screen_controller.dart';
 import 'package:ecommerce_app/src/features/products/data/fake_products_repository.dart';
@@ -135,22 +134,18 @@ class EditOrRemoveItemWidget extends ConsumerWidget {
           itemIndex: itemIndex,
           onChanged: state.isLoading
               ? null
-              : (quantity) {
-                  ref
-                      .read(shoppingCartScreenControllerProvider.notifier)
-                      .updateItemQuantity(item.productId, quantity);
-                },
+              : (quantity) => ref
+                  .read(shoppingCartScreenControllerProvider.notifier)
+                  .updateItemQuantity(item.productId, quantity),
         ),
         IconButton(
           key: deleteKey(itemIndex),
           icon: Icon(Icons.delete, color: Colors.red[700]),
           onPressed: state.isLoading
               ? null
-              : () {
-                  ref
-                      .read(shoppingCartScreenControllerProvider.notifier)
-                      .removeItemById(item.productId);
-                },
+              : () => ref
+                  .read(shoppingCartScreenControllerProvider.notifier)
+                  .removeItemById(item.productId),
         ),
         const Spacer(),
       ],

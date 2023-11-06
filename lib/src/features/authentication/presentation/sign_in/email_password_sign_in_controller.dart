@@ -1,14 +1,13 @@
 import 'package:ecommerce_app/src/features/authentication/data/fake_auth_repository.dart';
 import 'package:ecommerce_app/src/features/authentication/presentation/sign_in/email_password_sign_in_state.dart';
-import 'package:ecommerce_app/src/utils/typedef.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EmailPasswordSignInController
     extends StateNotifier<EmailPasswordSignInState> {
-  EmailPasswordSignInController(
-      {required EmailPasswordSignInFormType formType,
-      required this.authRepository})
-      : super(EmailPasswordSignInState(formType: formType));
+  EmailPasswordSignInController({
+    required EmailPasswordSignInFormType formType,
+    required this.authRepository,
+  }) : super(EmailPasswordSignInState(formType: formType));
   final FakeAuthRepository authRepository;
 
   Future<bool> submit(String email, String password) async {
@@ -18,7 +17,7 @@ class EmailPasswordSignInController
     return value.hasError == false;
   }
 
-  FutureVoid _authenticate(String email, String password) {
+  Future<void> _authenticate(String email, String password) {
     switch (state.formType) {
       case EmailPasswordSignInFormType.signIn:
         return authRepository.signInWithEmailAndPassword(email, password);
@@ -28,20 +27,16 @@ class EmailPasswordSignInController
   }
 
   void updateFormType(EmailPasswordSignInFormType formType) {
-    state = state.copyWith(
-      // value: const AsyncValue.data(null),
-      formType: formType,
-    );
+    state = state.copyWith(formType: formType);
   }
 }
 
 final emailPasswordSignInControllerProvider = StateNotifierProvider.autoDispose
     .family<EmailPasswordSignInController, EmailPasswordSignInState,
-            EmailPasswordSignInFormType>(
-        (ref, EmailPasswordSignInFormType formType) {
+        EmailPasswordSignInFormType>((ref, formType) {
   final authRepository = ref.watch(authRepositoryProvider);
   return EmailPasswordSignInController(
-    formType: formType,
     authRepository: authRepository,
+    formType: formType,
   );
 });
