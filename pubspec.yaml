@@ -25,7 +25,7 @@ dependencies:
   sembast_web: 2.0.1+1
   intl: ^0.18.1
   path_provider: ^2.1.1
-  freezed_annotation: 2.1.0
+  freezed_annotation: ^2.4.1
   
   
 dev_dependencies:
@@ -35,8 +35,8 @@ dev_dependencies:
     sdk: flutter    
   flutter_lints: 2.0.1
   mocktail: 0.3.0
-  build_runner: ^2.2.0
-  freezed: ^2.1.0
+  build_runner: ^2.4.7
+  freezed: ^2.4.5
 
 
 # Custom app icon. For more info see: https://pub.dev/packages/flutter_launcher_icons
