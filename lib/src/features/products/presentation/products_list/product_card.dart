@@ -33,20 +33,21 @@ class ProductCard extends ConsumerWidget {
               gapH8,
               const Divider(),
               gapH8,
-              Text(product.title, style: Theme.of(context).textTheme.headline6),
+              Text(product.title,
+                  style: Theme.of(context).textTheme.titleSmall),
               if (product.numRatings >= 1) ...[
                 gapH8,
                 ProductAverageRating(product: product),
               ],
               gapH24,
               Text(priceFormatted,
-                  style: Theme.of(context).textTheme.headline5),
+                  style: Theme.of(context).textTheme.titleSmall),
               gapH4,
               Text(
                 product.availableQuantity <= 0
                     ? 'Out of Stock'.hardcoded
                     : 'Quantity: ${product.availableQuantity}'.hardcoded,
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.titleSmall,
               )
             ],
           ),
