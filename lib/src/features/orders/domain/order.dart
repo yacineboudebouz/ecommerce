@@ -1,4 +1,5 @@
-import 'package:ecommerce_app/src/exceptions/app_exceptions.dart';
+import 'package:ecommerce_app/src/exceptions/app_exception.dart';
+import 'package:ecommerce_app/src/features/products/domain/product.dart';
 
 /// Order status
 enum OrderStatus { confirmed, shipped, delivered }
@@ -9,7 +10,7 @@ extension OrderStatusString on OrderStatus {
     if (string == 'confirmed') return OrderStatus.confirmed;
     if (string == 'shipped') return OrderStatus.shipped;
     if (string == 'delivered') return OrderStatus.delivered;
-    throw ParseOrderFailureException(string);
+    throw AppException.parseOrderFailure(string);
   }
 }
 
@@ -34,7 +35,7 @@ class Order {
   final String userId;
 
   /// List of items in that order
-  final Map<String, int> items;
+  final Map<ProductID, int> items;
   final OrderStatus orderStatus;
   final DateTime orderDate;
   final double total;

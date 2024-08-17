@@ -14,7 +14,7 @@ class CartTotalText extends ConsumerWidget {
         ref.watch(currencyFormatterProvider).format(cartTotal);
     return Text(
       'Total: $totalFormatted',
-      style: Theme.of(context).textTheme.bodySmall,
+      style: Theme.of(context).textTheme.titleSmall,
       textAlign: TextAlign.center,
     );
   }

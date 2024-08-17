@@ -1,1 +1,0 @@
-typedef FutureVoid = Future<void>;

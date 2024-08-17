@@ -32,7 +32,6 @@ class CartSyncService {
   /// available quantities
   Future<void> _moveItemsToRemoteCart(String uid) async {
     try {
-      // throw Exception("Something went wrong");
       // Get the local cart data
       final localCartRepository = ref.read(localCartRepositoryProvider);
       final localCart = await localCartRepository.fetchCart();
@@ -49,8 +48,8 @@ class CartSyncService {
         // Remove all items from the local cart
         await localCartRepository.setCart(const Cart());
       }
-    } catch (e, tr) {
-      ref.read(errorLoggerProvider).logError(e, tr);
+    } catch (e, st) {
+      ref.read(errorLoggerProvider).logError(e, st);
     }
   }
 

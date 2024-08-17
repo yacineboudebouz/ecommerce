@@ -47,7 +47,7 @@ class ProductCard extends ConsumerWidget {
                 product.availableQuantity <= 0
                     ? 'Out of Stock'.hardcoded
                     : 'Quantity: ${product.availableQuantity}'.hardcoded,
-                style: Theme.of(context).textTheme.titleSmall,
+                style: Theme.of(context).textTheme.bodyMedium,
               )
             ],
           ),

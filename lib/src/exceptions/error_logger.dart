@@ -3,14 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ErrorLogger {
-  void logError(dynamic error, StackTrace stackTrace) {
-    debugPrint('Error: $error');
-    debugPrint('Stack Trace: $stackTrace');
+  void logError(Object error, StackTrace? stackTrace) {
+    // * This can be replaced with a call to a crash reporting tool of choice
+    debugPrint('$error, $stackTrace');
   }
 
   void logAppException(AppException exception) {
-    debugPrint('AppException: $exception');
+    // * This can be replaced with a call to a crash reporting tool of choice
+    debugPrint('$exception');
   }
 }
 
-final errorLoggerProvider = Provider((ref) => ErrorLogger());
+final errorLoggerProvider = Provider<ErrorLogger>((ref) {
+  return ErrorLogger();
+});
