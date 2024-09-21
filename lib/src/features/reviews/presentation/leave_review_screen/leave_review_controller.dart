@@ -17,12 +17,20 @@ class LeaveReviewController extends StateNotifier<AsyncValue<void>> {
     required ProductID productId,
     required String comment,
     required double rating,
+    required void Function() onSuccess,
   }) async {
     final review =
         Review(rating: rating, comment: comment, date: currentDateBuilder());
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() =>
+    final newState = await AsyncValue.guard(() =>
         reviewsService.submitReview(productId: productId, review: review));
+
+    if (mounted) {
+      state = newState;
+      if (state.hasError == false) {
+        onSuccess();
+      }
+    }
   }
 }
 
