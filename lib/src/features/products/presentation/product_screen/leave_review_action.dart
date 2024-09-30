@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/src/features/orders/domain/order.dart';
+import 'package:ecommerce_app/src/features/orders/application/user_orders_provider.dart';
 import 'package:ecommerce_app/src/features/products/domain/product.dart';
 import 'package:ecommerce_app/src/localization/string_hardcoded.dart';
 import 'package:ecommerce_app/src/routing/app_router.dart';
@@ -18,18 +18,8 @@ class LeaveReviewAction extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Read from data source
-    final orders = [
-      Order(
-        id: 'abc',
-        userId: '123',
-        items: {productId: 1},
-        orderStatus: OrderStatus.confirmed,
-        orderDate: DateTime.now(),
-        total: 15.0,
-      )
-    ];
-    if (orders.isNotEmpty) {
+    final orders = ref.watch(matchingUserOrdersProvider(productId)).value;
+    if (orders != null && orders.isNotEmpty) {
       final dateFormatted =
           ref.watch(dateFormatterProvider).format(orders.first.orderDate);
       return Column(
